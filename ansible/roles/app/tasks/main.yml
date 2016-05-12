@@ -14,3 +14,12 @@
 - name: install owncloud
   apt:
     name: owncloud
+
+- name: change ownership of owncloud files
+  file:
+    state: directory
+    recurse: yes
+    path: /usr/share/owncloud/
+    owner: www-data
+    group: www-data
+    mode: 0644
