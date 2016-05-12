@@ -25,10 +25,10 @@ end
 Vagrant.configure("2") do |config|
 
     config.vm.provider :virtualbox do |v|
-        v.name = "default"
+        v.name = "phansible-firstgo"
         v.customize [
             "modifyvm", :id,
-            "--name", "default",
+            "--name", "phansible-firstgo",
             "--memory", 512,
             "--natdnshostresolver1", "on",
             "--cpus", 1,
@@ -51,7 +51,7 @@ Vagrant.configure("2") do |config|
             ansible.limit = 'all'
         end
     else
-        config.vm.provision :shell, path: "ansible/windows.sh", args: ["default"]
+        config.vm.provision :shell, path: "ansible/windows.sh", args: ["phansible-firstgo"]
     end
 
     config.vm.synced_folder "./", "/vagrant", type: "nfs"
