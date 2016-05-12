@@ -5,3 +5,12 @@
   apt_key:
    url: https://download.owncloud.org/download/repositories/stable/xUbuntu_14.04/Release.key
    validate_certs: no
+
+- name: add owncloud repo to apt
+  apt_repository:
+    repo: 'deb http://archive.canonical.com/ubuntu hardy partner'
+    update_cache: yes
+
+- name: install owncloud
+  apt:
+    name: owncloud
