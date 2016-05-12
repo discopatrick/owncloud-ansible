@@ -8,7 +8,7 @@
 
 - name: add owncloud repo to apt
   apt_repository:
-    repo: 'deb http://archive.canonical.com/ubuntu hardy partner'
+    repo: 'deb http://download.owncloud.org/download/repositories/9.0/xUbuntu_14.04/ /'
     update_cache: yes
 
 - name: install owncloud
