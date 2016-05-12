@@ -30,3 +30,10 @@
     src: owncloud.conf.tpl
     dest: /etc/apache2/sites-available/owncloud.conf
   notify: restart apache
+
+- name: symlink apache conf file to enable site
+  file:
+    src: /etc/apache2/sites-available/owncloud.conf
+    dest: /etc/apache2/sites-enabled/owncloud.conf
+    state: link
+  notify: restart apache
