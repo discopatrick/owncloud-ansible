@@ -37,3 +37,14 @@
     dest: /etc/apache2/sites-enabled/owncloud.conf
     state: link
   notify: restart apache
+
+- name: enable required apache modules
+  apache2_module:
+    name: "{{ item }}"
+  with_items:
+    - rewrite
+    - headers
+    - env
+    - dir
+    - mime
+  notify: restart apache
