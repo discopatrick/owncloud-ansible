@@ -23,3 +23,10 @@
     owner: www-data
     group: www-data
     mode: 0644
+
+- name: create apache conf file
+  sudo: yes
+  template:
+    src: owncloud.conf.tpl
+    dest: /etc/apache2/sites-available/owncloud.conf
+  notify: restart apache
