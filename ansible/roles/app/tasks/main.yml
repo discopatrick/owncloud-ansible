@@ -66,6 +66,26 @@
     chdir: /var/www/owncloud/
   # when: trusted_domains.stdout.find('192.168.33.99') != -1
 
+- name: get 'lastseen' status of patrick user
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  command: php occ user:lastseen patrick
+  args:
+    chdir: /var/www/owncloud/
+  register: lastseen
+
+- name: add a user
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  environment:
+    OC_PASS: Patrick123!
+  command: php occ user:add --password-from-env patrick
+  args:
+    chdir: /var/www/owncloud/
+  when: lastseen.stdout.find('User does not exist') != -1
+
 - name: enable required apache modules
   apache2_module:
     name: "{{ item }}"
