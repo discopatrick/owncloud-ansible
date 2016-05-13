@@ -26,6 +26,7 @@
   script: ./files/owncloud_permissions.sh
 
 # the occ is the owncloud command line interface
+
 - name: get list of available occ tasks
   become: yes
   become_method: sudo
@@ -43,6 +44,27 @@
   args:
     chdir: /var/www/owncloud/
   when: occ_list.stdout.find('maintenance:install') != -1
+
+# todo: this attempt at idempotency for the 'add our domain/ip' task does not work.
+# however, no errors are caused, so it's fine for now.
+
+# - name: get current trusted_domains config
+#   become: yes
+#   become_method: sudo
+#   become_user: www-data
+#   command: php occ config:system:get trusted_domains
+#   args:
+#     chdir: /var/www/owncloud/
+#   register: trusted_domains
+
+- name: add our domain/ip to the list of trusted_domains # (only if not already there)
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  command: php occ config:system:set trusted_domains 1 --value=192.168.33.99
+  args:
+    chdir: /var/www/owncloud/
+  # when: trusted_domains.stdout.find('192.168.33.99') != -1
 
 - name: enable required apache modules
   apache2_module:
