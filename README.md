@@ -6,4 +6,4 @@
 
 ## Useful things to remember
 
-* To open a shell as a specific user, you can do: `sudo -u www-data -s`
+* When using a box via the terminall manually, to open a shell as a specific user, you can do: `sudo -u www-data -s`
