@@ -22,27 +22,10 @@
     owner: www-data
     group: www-data
 
-- name: create apache conf file
-  sudo: yes
-  template:
-    src: owncloud.conf.tpl
-    dest: /etc/apache2/sites-available/owncloud.conf
-  notify: restart apache
-
-- name: symlink apache conf file to enable site
-  file:
-    src: /etc/apache2/sites-available/owncloud.conf
-    dest: /etc/apache2/sites-enabled/owncloud.conf
-    state: link
-  notify: restart apache
-
-- name: enable required apache modules
-  apache2_module:
-    name: "{{ item }}"
-  with_items:
-    - rewrite
-    - headers
-    - env
-    - dir
-    - mime
-  notify: restart apache
+- name: run owncloud cli installer
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  command: 'php occ maintenance:install --database "mysql" --database-name "{{ mysql.database }}"  --database-user "{{ mysql.user }}" --database-pass "{{ mysql.password }}" --admin-user "{{ owncloud.user }}" --admin-pass "{{ owncloud.password }}"'
+  args:
+    chdir: /var/www/owncloud/
