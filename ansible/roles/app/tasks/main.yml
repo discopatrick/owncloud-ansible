@@ -15,14 +15,12 @@
   apt:
     name: owncloud
 
-- name: change ownership of owncloud files
+- name: change ownership of the owncloud directory
   file:
     state: directory
-    recurse: yes
-    path: /usr/share/owncloud/
+    path: /var/www/owncloud/
     owner: www-data
     group: www-data
-    mode: 0644
 
 - name: create apache conf file
   sudo: yes
