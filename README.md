@@ -2,7 +2,7 @@
 
 ## TODO
 
-* nothing right now...
+* Install python >= 2.7.9 to fix SSL certificate errors when downloading apt repo keys. Remove current 'validate_certs: no' setting
 
 ## Useful things to remember
 
