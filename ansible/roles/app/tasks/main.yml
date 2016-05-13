@@ -25,15 +25,24 @@
 - name: run the owncloud permissions script
   script: ./files/owncloud_permissions.sh
 
-# todo: this task is not idempotent, and will fail on second run.
-# the maintenance:install command disappears after install, causing an error.
-- name: run owncloud cli installer
+# the occ is the owncloud command line interface
+- name: get list of available occ tasks
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  command: php occ list
+  args:
+    chdir: /var/www/owncloud/
+  register: occ_list
+
+- name: run owncloud cli installer (only if 'maintenance:install' task is available)
   become: yes
   become_method: sudo
   become_user: www-data
   command: 'php occ maintenance:install --database "mysql" --database-name "{{ mysql.database }}"  --database-user "{{ mysql.user }}" --database-pass "{{ mysql.password }}" --admin-user "{{ owncloud.user }}" --admin-pass "{{ owncloud.password }}"'
   args:
     chdir: /var/www/owncloud/
+  when: occ_list.stdout.find('maintenance:install') != -1
 
 - name: enable required apache modules
   apache2_module:
