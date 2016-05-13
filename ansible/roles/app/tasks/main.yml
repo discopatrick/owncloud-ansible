@@ -25,6 +25,8 @@
 - name: run the owncloud permissions script
   script: ./files/owncloud_permissions.sh
 
+# todo: this task is not idempotent, and will fail on second run.
+# the maintenance:install command disappears after install, causing an error.
 - name: run owncloud cli installer
   become: yes
   become_method: sudo
