@@ -86,6 +86,39 @@
     chdir: /var/www/owncloud/
   when: lastseen.stdout.find('User does not exist') != -1
 
+- name: check if contacts dir exists
+  stat: 
+    path: /var/www/owncloud/apps/contacts
+  register: contacts_app_dir
+
+- name: get contacts app
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  get_url:
+    url: https://github.com/owncloud/contacts/releases/download/v0.0.0.59/contacts.tar.gz
+    dest: /var/www/owncloud/apps/
+  when: contacts_app_dir.stat.exists is defined and contacts_app_dir.stat.exists == False
+
+- name: unpack contacts app
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  unarchive:
+    copy: no
+    src: /var/www/owncloud/apps/contacts.tar.gz
+    dest: /var/www/owncloud/apps/
+  when: contacts_app_dir.stat.exists is defined and contacts_app_dir.stat.exists == False
+
+- name: remove contacts app tarball
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  file:
+    path: /var/www/owncloud/apps/contacts.tar.gz
+    state: absent
+  when: contacts_app_dir.stat.exists is defined and contacts_app_dir.stat.exists == False
+
 - name: enable required apache modules
   apache2_module:
     name: "{{ item }}"
