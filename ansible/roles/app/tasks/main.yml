@@ -22,9 +22,6 @@
     owner: www-data
     group: www-data
 
-- name: run the owncloud permissions script
-  script: ./files/owncloud_permissions.sh
-
 # the occ is the owncloud command line interface
 
 - name: get list of available occ tasks
@@ -118,6 +115,9 @@
     path: /var/www/owncloud/apps/contacts.tar.gz
     state: absent
   when: contacts_app_dir.stat.exists is defined and contacts_app_dir.stat.exists == False
+
+- name: run the owncloud permissions script # do this after all apps are added
+  script: ./files/owncloud_permissions.sh
 
 - name: enable required apache modules
   apache2_module:
