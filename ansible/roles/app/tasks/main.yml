@@ -116,6 +116,14 @@
     state: absent
   when: contacts_app_dir.stat.exists is defined and contacts_app_dir.stat.exists == False
 
+- name: enable the contacts app
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  command: php occ app:enable contacts
+  args:
+    chdir: /var/www/owncloud/  
+
 - name: run the owncloud permissions script # do this after all apps are added
   script: ./files/owncloud_permissions.sh
 
