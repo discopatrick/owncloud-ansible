@@ -3,6 +3,7 @@
   sudo: true
   vars_files:
     - vars/all.yml
+    - vars/vault.yml
   roles:
     - server
     - vagrant_local
@@ -10,4 +11,5 @@
     - mysql
     - php
     - composer
-    - app
+    - ssilab.aws-cli
+    - { role: app, tags: ['app'] }
