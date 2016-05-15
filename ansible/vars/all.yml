@@ -3,6 +3,7 @@ server:
     install: '1'
     timezone: Europe/London
     locale: en_GB.UTF-8
+    packages: [python-pip]
 vagrant_local:
     install: '1'
     vm: { base_box: trusty64, hostname: phansible-firstgo, ip: 192.168.33.99, memory: '512', sharedfolder: ./, syncType: nfs }
@@ -30,3 +31,4 @@ aws_output_format: 'json'
 aws_region: 'eu-west-1'
 aws_access_key_id: "{{ vault_aws_access_key_id }}"
 aws_secret_access_key: "{{ vault_aws_secret_access_key }}"
+aws_cli_user: root

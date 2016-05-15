@@ -1,5 +1,2 @@
 ---
 
-- name: ssilab.aws-cli
-  src: ssilab.aws-cli
-  version: 'v1.1'

@@ -7,6 +7,11 @@
   args:
     chdir: /var/www/owncloud/
 
+- name: copy file to aws
+  become: yes
+  become_method: sudo
+  command: "aws s3 cp /var/www/owncloud/AUTHORS s3://discopatrick-owncloud-backups/"
+
 - name: take owncloud out of maintenance mode
   become: yes
   become_method: sudo
