@@ -7,3 +7,6 @@
 ## Useful things to remember
 
 * When using a box via the terminall manually, to open a shell as a specific user, you can do: `sudo -u www-data -s`
+* Here's an example of running ansible-playbook directly: `ansible-playbook --private-key=../.vagrant/machines/default/virtualbox/private_key -u vagrant backup.yml`
+	* don't forget to disable host checking if it will help during dev (in ansible.cfg)
+	* also specify the inventory file in ansible.cfg
