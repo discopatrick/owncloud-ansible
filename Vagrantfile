@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
             ansible.playbook = "ansible/playbook.yml"
             ansible.inventory_path = "ansible/inventories/dev"
             ansible.limit = 'all'
-            # ansible.verbose = "vvv"
+            ansible.verbose = "v"
         end
     else
         config.vm.provision :shell, path: "ansible/windows.sh", args: ["phansible-firstgo"]
