@@ -7,6 +7,31 @@
   args:
     chdir: /var/www/owncloud/
 
+- name: get server datetime
+  command: date --iso-8601=seconds --utc
+  register: datetime
+
+- name: create backup directory
+  file:
+    state: directory
+    path: /root/owncloud-backup-{{ datetime.stdout }}
+
+- name: create sql dump
+  # must use 'shell' module, as the command uses the '>' character to pass the output to a filename
+  shell: mysqldump --lock-tables --host=localhost --user={{ mysql.user }} --password={{ mysql.password }} {{ mysql.database }} > /root/owncloud-backup-{{ datetime.stdout }}/owncloud.sql
+
+- name: copy config folder
+  synchronize:
+    src: /var/www/owncloud/config
+    dest: /root/owncloud-backup-{{ datetime.stdout }}/
+  delegate_to: 192.168.33.99
+
+- name: copy data folder
+  synchronize:
+    src: /var/www/owncloud/data
+    dest: /root/owncloud-backup-{{ datetime.stdout }}/
+  delegate_to: 192.168.33.99
+
 - name: copy file to aws
   become: yes
   become_method: sudo
