@@ -42,6 +42,29 @@
     chdir: /var/www/owncloud/
   when: occ_list.stdout.find('maintenance:install') != -1
 
+- name: configure occ to use correct domain name # must happen after install
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  command: php occ config:system:set overwrite.cli.url --value "http://192.168.33.99/owncloud"
+  args:
+    chdir: /var/www/owncloud/
+
+- name: configure owncloud with correct RewriteBase
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  command: php occ config:system:set htaccess.RewriteBase --value "/owncloud"
+  args:
+    chdir: /var/www/owncloud/
+
+- name: update .htaccess with correct RewriteBase
+  # should be replaced in 9.0.3 with: php occ maintenance:update:htaccess
+  lineinfile:
+    dest: /var/www/owncloud/.htaccess
+    regexp: ^\s*RewriteBase
+    line: RewriteBase /owncloud
+
 # todo: this attempt at idempotency for the 'add our domain/ip' task does not work.
 # however, no errors are caused, so it's fine for now.
 
