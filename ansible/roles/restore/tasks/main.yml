@@ -1,3 +1,66 @@
 ---
 
+- name: put owncloud into maintenance mode
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  command: php occ maintenance:mode --on
+  args:
+    chdir: /var/www/owncloud/
 
+- name: get filename of latest backup from aws
+  shell: aws s3 ls s3://discopatrick-owncloud-backups/ | awk '{print $4}' | grep 'owncloud-backup-.*\.tar\.gz' | sort | tail -n 1
+  register: backup_filename
+
+- name: copy backup file to home folder
+  command: aws s3 cp s3://discopatrick-owncloud-backups/{{ backup_filename.stdout }} ~/
+
+# - name: move backup file to owncloud folder
+#   become: yes
+#   copy:
+#     remote_src: yes
+#     src: /home/vagrant/{{ backup_filename.stdout }}
+#     dest: /var/www/owncloud/owncloud-backup.tar.gz
+#     owner: www-data
+#     group: www-data
+
+- name: create temp backup directory
+  file:
+    state: directory
+    path: ~/backup_temp_dir/
+
+- name: unpack the backup
+  unarchive:
+    copy: no
+    src: ~/{{ backup_filename.stdout }}
+    dest: ~/backup_temp_dir/
+    list_files: yes
+
+- name: sync the config folder
+  become: yes
+  synchronize:
+    src: /home/vagrant/backup_temp_dir/config
+    dest: /var/www/owncloud/
+    recursive: yes
+    delete: yes
+  delegate_to: 192.168.33.99
+
+- name: sync the data folder
+  become: yes
+  synchronize:
+    src: /home/vagrant/backup_temp_dir/data
+    dest: /var/www/owncloud/
+    delete: yes
+  delegate_to: 192.168.33.99
+
+- name: run the owncloud permissions script
+  become: yes
+  script: ./files/owncloud_permissions.sh
+
+- name: take owncloud out of maintenance mode
+  become: yes
+  become_method: sudo
+  become_user: www-data
+  command: php occ maintenance:mode --off
+  args:
+    chdir: /var/www/owncloud/

@@ -25,17 +25,19 @@
   shell: mysqldump --lock-tables --host=localhost --user={{ mysql.user }} --password={{ mysql.password }} {{ mysql.database }} > ~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud.sql
 
 - name: copy config folder
-  become: yes
   synchronize:
     src: /var/www/owncloud/config
     dest: /home/vagrant/owncloud-backup-{{ epochdatetime.stdout }}/
+    owner: no
+    group: no
   delegate_to: 192.168.33.99
 
 - name: copy data folder
-  become: yes
   synchronize:
     src: /var/www/owncloud/data
     dest: /home/vagrant/owncloud-backup-{{ epochdatetime.stdout }}/
+    owner: no
+    group: no
   delegate_to: 192.168.33.99
 
 - name: tar and gzip
