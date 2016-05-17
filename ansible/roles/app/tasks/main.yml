@@ -1,6 +1,12 @@
 ---
 # application tasks to be customized and to run after the main provision
 
+- name: add vagrant user to www-data group
+  user:
+    name: vagrant
+    groups: www-data
+    append: yes
+
 - name: add owncloud apt key
   apt_key:
    url: https://download.owncloud.org/download/repositories/9.0/xUbuntu_14.04/Release.key
@@ -177,16 +183,16 @@
 
 - name: 'Install AWS CLI'
   tags: 'aws-cli'
-  sudo: 'yes'
+  become: yes
   pip:
     name: awscli
     state: latest
 
 - name: 'Create the AWS config directory'
   tags: 'aws-cli'
-  sudo: 'yes'
+  become: no
   file: >
-    path=/root/.aws
+    path=~/.aws
     state=directory
     owner={{ aws_cli_user }}
     group={{ aws_cli_user }}
@@ -194,10 +200,10 @@
 
 - name: 'Copy AWS CLI config'
   tags: 'aws-cli'
-  sudo: 'yes'
+  become: no
   template: >
     src=aws_cli_config.j2
-    dest=/root/.aws/config
+    dest=~/.aws/config
     owner={{ aws_cli_user }}
     group={{ aws_cli_user }}
     mode=0644

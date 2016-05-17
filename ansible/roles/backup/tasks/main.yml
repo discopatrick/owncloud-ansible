@@ -7,35 +7,47 @@
   args:
     chdir: /var/www/owncloud/
 
-- name: get server datetime
+- name: get server isodatetime
   command: date --iso-8601=seconds --utc
-  register: datetime
+  register: isodatetime
 
-- name: create backup directory
+- name: get epoch datetime
+  command: date +%s
+  register: epochdatetime
+
+- name: create temp backup directory
   file:
     state: directory
-    path: /root/owncloud-backup-{{ datetime.stdout }}
+    path: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
 - name: create sql dump
   # must use 'shell' module, as the command uses the '>' character to pass the output to a filename
-  shell: mysqldump --lock-tables --host=localhost --user={{ mysql.user }} --password={{ mysql.password }} {{ mysql.database }} > /root/owncloud-backup-{{ datetime.stdout }}/owncloud.sql
+  shell: mysqldump --lock-tables --host=localhost --user={{ mysql.user }} --password={{ mysql.password }} {{ mysql.database }} > ~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud.sql
 
 - name: copy config folder
+  become: yes
   synchronize:
     src: /var/www/owncloud/config
-    dest: /root/owncloud-backup-{{ datetime.stdout }}/
+    dest: /home/vagrant/owncloud-backup-{{ epochdatetime.stdout }}/
   delegate_to: 192.168.33.99
 
 - name: copy data folder
+  become: yes
   synchronize:
     src: /var/www/owncloud/data
-    dest: /root/owncloud-backup-{{ datetime.stdout }}/
+    dest: /home/vagrant/owncloud-backup-{{ epochdatetime.stdout }}/
   delegate_to: 192.168.33.99
 
-- name: copy file to aws
-  become: yes
-  become_method: sudo
-  command: "aws s3 cp /var/www/owncloud/AUTHORS s3://discopatrick-owncloud-backups/"
+- name: tar and gzip
+  # has to be shell to work - best guess is that chdir doesn't work with command... although I think I've used it elsewhere...
+  shell: tar -czvf ./owncloud-backup-{{ isodatetime.stdout }}.tar.gz ./*
+  args:
+    chdir: ~/owncloud-backup-{{ epochdatetime.stdout }}
+
+- name: copy backup to aws
+  command: "aws s3 cp ./owncloud-backup-{{ isodatetime.stdout }}.tar.gz s3://discopatrick-owncloud-backups/"
+  args:
+    chdir: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
 - name: take owncloud out of maintenance mode
   become: yes
