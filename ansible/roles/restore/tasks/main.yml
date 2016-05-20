@@ -7,6 +7,12 @@
   args:
     chdir: /var/www/owncloud/
 
+- name: stop apache
+  become: yes
+  service:
+    name: apache2
+    state: stopped
+
 - name: get filename of latest backup from aws
   shell: aws s3 ls s3://discopatrick-owncloud-backups/ | awk '{print $4}' | grep 'owncloud-backup-.*\.tar\.gz' | sort | tail -n 1
   register: backup_filename
@@ -69,6 +75,12 @@
 - name: run the owncloud permissions script
   become: yes
   script: ./files/owncloud_permissions.sh
+
+- name: start apache
+  become: yes
+  service:
+    name: apache2
+    state: started
 
 - name: take owncloud out of maintenance mode
   become: yes

@@ -6,6 +6,12 @@
   args:
     chdir: /var/www/owncloud/
 
+- name: stop apache
+  become: yes
+  service:
+    name: apache2
+    state: stopped
+
 - name: get server isodatetime
   command: date --iso-8601=seconds --utc
   register: isodatetime
@@ -54,6 +60,12 @@
   file:
     state: absent
     path: ~/owncloud-backup-{{ epochdatetime.stdout }}
+
+- name: start apache
+  become: yes
+  service:
+    name: apache2
+    state: started
 
 - name: take owncloud out of maintenance mode
   become: yes
