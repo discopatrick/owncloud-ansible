@@ -56,6 +56,16 @@
     delete: yes
   delegate_to: 192.168.33.99
 
+- name: delete the temp folder
+  file:
+    state: absent
+    path: ~/backup_temp_dir/
+
+- name: delete the backup file
+  file:
+    state: absent
+    path: ~/{{ backup_filename.stdout }}
+
 - name: run the owncloud permissions script
   become: yes
   script: ./files/owncloud_permissions.sh

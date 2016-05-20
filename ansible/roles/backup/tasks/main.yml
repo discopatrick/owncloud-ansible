@@ -50,6 +50,11 @@
   args:
     chdir: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
+- name: delete the backup folder
+  file:
+    state: absent
+    path: ~/owncloud-backup-{{ epochdatetime.stdout }}
+
 - name: take owncloud out of maintenance mode
   become: yes
   become_user: www-data
