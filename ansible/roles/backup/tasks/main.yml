@@ -1,7 +1,6 @@
 ---
 - name: put owncloud into maintenance mode
   become: yes
-  become_method: sudo
   become_user: www-data
   command: php occ maintenance:mode --on
   args:
@@ -53,7 +52,6 @@
 
 - name: take owncloud out of maintenance mode
   become: yes
-  become_method: sudo
   become_user: www-data
   command: php occ maintenance:mode --off
   args:
