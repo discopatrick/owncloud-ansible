@@ -168,7 +168,7 @@
   notify: restart apache
 
 - name: create apache conf file
-  sudo: yes
+  become: yes
   template:
     src: owncloud.conf.tpl
     dest: /etc/apache2/sites-available/owncloud.conf
