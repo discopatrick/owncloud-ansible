@@ -50,6 +50,7 @@ Vagrant.configure("2") do |config|
             ansible.inventory_path = "ansible/inventories/dev"
             ansible.limit = 'all'
             ansible.verbose = "v"
+            ansible.vault_password_file = './ansible/.vault_pass'
         end
     else
         config.vm.provision :shell, path: "ansible/windows.sh", args: ["phansible-firstgo"]
