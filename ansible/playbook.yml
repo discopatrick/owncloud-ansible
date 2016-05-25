@@ -12,4 +12,5 @@
     - mysql
     - php
     - composer
+    - { role: admin_user, when: "'dev' not in group_names" }
     - { role: app, tags: ['app'] }
