@@ -3,7 +3,5 @@
   become: no
   become_method: sudo
   become_user: root
-  vars_files:
-    - vars/all.yml
   roles:
     - backup
