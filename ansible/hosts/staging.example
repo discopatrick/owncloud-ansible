@@ -1,0 +1,7 @@
+# uncomment the lines below, and add your own staging hostname
+
+#[owncloud]
+#staging-hostname
+
+#[staging]
+#staging-hostname
