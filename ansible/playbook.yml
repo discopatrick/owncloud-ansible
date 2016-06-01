@@ -1,16 +1,19 @@
 ---
-- hosts: all
+- name: provision the server for OwnCloud
+  hosts: all
+  gather_facts: no
   become: no
   become_method: sudo
   become_user: root
   vars_files:
     - group_vars/vault.yml
+  remote_user: "{{ my_remote_user }}"
   roles:
+    - { role: admin_user, when: "'dev' not in group_names" }
     - server
     - { role: vagrant_local, when: "'dev' in group_names" }
     - apache
     - mysql
     - php
     - composer
-    - { role: admin_user, when: "'dev' not in group_names" }
     - { role: app, tags: ['app'] }

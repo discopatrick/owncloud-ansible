@@ -1,11 +1,12 @@
 ---
 
 - name: create admin group
+  remote_user: root
   group:
     name: admin
 
 - name: Allow admin group to have passwordless sudo
-  become: yes
+  remote_user: root
   lineinfile:
     dest: /etc/sudoers
     state: present
@@ -13,8 +14,14 @@
     line: '%admin ALL=(ALL) NOPASSWD: ALL'
 
 - name: create admin user in admin group
-  become: yes
+  remote_user: root
   user:
     name: admin
     groups: admin
     append: yes
+
+- name: add ssh public key for admin user
+  remote_user: root
+  authorized_key:
+    user: admin
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

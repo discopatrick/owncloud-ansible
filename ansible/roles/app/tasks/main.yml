@@ -46,7 +46,7 @@
 - name: run owncloud cli installer (only if 'maintenance:install' task is available)
   become: yes
   become_user: www-data
-  command: 'php occ maintenance:install --database "mysql" --database-name "{{ mysql.database }}"  --database-user "{{ mysql.user }}" --database-pass "{{ mysql.password }}" --admin-user "{{ owncloud.user }}" --admin-pass "{{ owncloud.password }}"'
+  command: 'php occ maintenance:install --database "mysql" --database-name "{{ mysql.database }}"  --database-user "{{ mysql.user }}" --database-pass "{{ mysql.password }}" --admin-user "{{ owncloud.admin_user }}" --admin-pass "{{ owncloud.admin_password }}"'
   args:
     chdir: /var/www/owncloud/
   when: occ_list.stdout.find('maintenance:install') != -1
@@ -54,7 +54,7 @@
 - name: configure occ to use correct domain name # must happen after install
   become: yes
   become_user: www-data
-  command: php occ config:system:set overwrite.cli.url --value "http://192.168.33.99/owncloud"
+  command: php occ config:system:set overwrite.cli.url --value "http://{{ inventory_hostname }}/owncloud"
   args:
     chdir: /var/www/owncloud/
 
@@ -89,15 +89,15 @@
 - name: add our domain/ip to the list of trusted_domains # (only if not already there)
   become: yes
   become_user: www-data
-  command: php occ config:system:set trusted_domains 1 --value=192.168.33.99
+  command: php occ config:system:set trusted_domains 1 --value={{ inventory_hostname }}
   args:
     chdir: /var/www/owncloud/
   # when: trusted_domains.stdout.find('192.168.33.99') != -1
 
-- name: get 'lastseen' status of patrick user
+- name: get 'lastseen' status of  user
   become: yes
   become_user: www-data
-  command: php occ user:lastseen patrick
+  command: php occ user:lastseen {{ owncloud.user }}
   args:
     chdir: /var/www/owncloud/
   register: lastseen
@@ -106,18 +106,20 @@
   become: yes
   become_user: www-data
   environment:
-    OC_PASS: Patrick123!
-  command: php occ user:add --password-from-env patrick
+    OC_PASS: "{{ owncloud.password }}"
+  command: php occ user:add --password-from-env {{ owncloud.user }}
   args:
     chdir: /var/www/owncloud/
   when: lastseen.stdout.find('User does not exist') != -1
 
 - name: check if contacts dir exists
+  become: yes
   stat: 
     path: /var/www/owncloud/apps/contacts
   register: contacts_app_dir
 
 - name: check if calendar dir exists
+  become: yes
   stat: 
     path: /var/www/owncloud/apps/calendar
   register: calendar_app_dir
@@ -225,6 +227,7 @@
 
 - name: 'Create the AWS config directory'
   tags: 'aws-cli'
+  become: yes
   file: >
     path=~/.aws
     state=directory
@@ -234,6 +237,7 @@
 
 - name: 'Copy AWS CLI config'
   tags: 'aws-cli'
+  become: yes
   template: >
     src=aws_cli_config.j2
     dest=~/.aws/config
