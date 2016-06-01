@@ -3,7 +3,7 @@
 ## TODO
 
 * Install python >= 2.7.9 to fix SSL certificate errors when downloading apt repo keys. Remove current 'validate_certs: no' setting
-* restore.yml - Restore db in addition to files
+* restore.yml - fix db restoration task - some problem with quotes, or odd password chars?
 
 ## Useful things to remember
 
