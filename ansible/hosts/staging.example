@@ -1,4 +1,4 @@
-# uncomment the lines below, and add your own staging hostname
+# rename to 'staging', uncomment the lines below, and add your own staging hostname
 
 #[owncloud]
 #staging-hostname
