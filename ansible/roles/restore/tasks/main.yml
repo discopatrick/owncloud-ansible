@@ -24,7 +24,7 @@
 #   become: yes
 #   copy:
 #     remote_src: yes
-#     src: /home/vagrant/{{ backup_filename.stdout }}
+#     src: /home/{{ my_remote_user }}/{{ backup_filename.stdout }}
 #     dest: /var/www/owncloud/owncloud-backup.tar.gz
 #     owner: www-data
 #     group: www-data
@@ -48,7 +48,7 @@
 - name: sync the config folder
   become: yes
   synchronize:
-    src: /home/vagrant/backup_temp_dir/config
+    src: /home/{{ my_remote_user }}/backup_temp_dir/config
     dest: /var/www/owncloud/
     recursive: yes
     delete: yes
@@ -57,7 +57,7 @@
 - name: sync the data folder
   become: yes
   synchronize:
-    src: /home/vagrant/backup_temp_dir/data
+    src: /home/{{ my_remote_user }}/backup_temp_dir/data
     dest: /var/www/owncloud/
     delete: yes
   delegate_to: 192.168.33.99

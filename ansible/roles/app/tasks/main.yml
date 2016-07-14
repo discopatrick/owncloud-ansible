@@ -1,10 +1,10 @@
 ---
 # application tasks to be customized and to run after the main provision
 
-- name: add vagrant user to www-data group
+- name: add remote user to www-data group
   become: yes
   user:
-    name: vagrant
+    name: "{{ my_remote_user }}"
     groups: www-data
     append: yes
 
@@ -227,20 +227,18 @@
 
 - name: 'Create the AWS config directory'
   tags: 'aws-cli'
-  become: yes
   file: >
     path=~/.aws
     state=directory
-    owner={{ aws_cli_user }}
-    group={{ aws_cli_user }}
+    owner={{ my_remote_user }}
+    group={{ my_remote_user }}
     mode=0755
 
 - name: 'Copy AWS CLI config'
   tags: 'aws-cli'
-  become: yes
   template: >
     src=aws_cli_config.j2
     dest=~/.aws/config
-    owner={{ aws_cli_user }}
-    group={{ aws_cli_user }}
+    owner={{ my_remote_user }}
+    group={{ my_remote_user }}
     mode=0644
