@@ -25,25 +25,24 @@
     state: directory
     path: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
-- name: create sql dump
-  # must use 'shell' module, as the command uses the '>' character to pass the output to a filename
-  shell: mysqldump --lock-tables --host=localhost --user={{ mysql.user }} --password={{ mysql.password }} {{ mysql.database }} > ~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud.sql
+- name: dump the db
+  mysql_db: name={{ mysql.database }} state=dump login_user={{ mysql.user }} login_password={{ mysql.password }} target=~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud.sql
 
 - name: copy config folder
   synchronize:
     src: /var/www/owncloud/config
-    dest: /home/vagrant/owncloud-backup-{{ epochdatetime.stdout }}/
+    dest: /home/{{ my_remote_user }}/owncloud-backup-{{ epochdatetime.stdout }}/
     owner: no
     group: no
-  delegate_to: 192.168.33.99
+  delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
 
 - name: copy data folder
   synchronize:
     src: /var/www/owncloud/data
-    dest: /home/vagrant/owncloud-backup-{{ epochdatetime.stdout }}/
+    dest: /home/{{ my_remote_user }}/owncloud-backup-{{ epochdatetime.stdout }}/
     owner: no
     group: no
-  delegate_to: 192.168.33.99
+  delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
 
 - name: tar and gzip
   # has to be shell to work - best guess is that chdir doesn't work with command... although I think I've used it elsewhere...
@@ -52,7 +51,7 @@
     chdir: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
 - name: copy backup to aws
-  command: "aws s3 cp ./owncloud-backup-{{ isodatetime.stdout }}.tar.gz s3://discopatrick-owncloud-backups/"
+  command: "aws s3 cp ./owncloud-backup-{{ isodatetime.stdout }}.tar.gz s3://{{ aws.bucket_name }}/"
   args:
     chdir: ~/owncloud-backup-{{ epochdatetime.stdout }}
 

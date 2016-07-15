@@ -1,0 +1,13 @@
+---
+
+my_remote_user: vagrant
+
+mysql:
+    root_password: '123'
+    database: db
+    user: user
+    password: password
+    dump: ''
+
+aws:
+  bucket_name: "{{ vault_bucket_name }}"

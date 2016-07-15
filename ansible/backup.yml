@@ -3,5 +3,6 @@
   become: no
   become_method: sudo
   become_user: root
+  remote_user: "{{ my_remote_user }}"
   roles:
     - backup

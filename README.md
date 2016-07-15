@@ -3,7 +3,7 @@
 ## TODO
 
 * Install python >= 2.7.9 to fix SSL certificate errors when downloading apt repo keys. Remove current 'validate_certs: no' setting
-* restore.yml - fix db restoration task - some problem with quotes, or odd password chars?
+* install and enable ClamAV antivirus?
 
 ## Useful things to remember
 
@@ -12,3 +12,4 @@
 	* don't forget to disable host checking if it will help during dev (in ansible.cfg)
 	* also specify the inventory file in ansible.cfg
 * Command to run the permissions script as a one-off task: ansible phansible-web -m script -a ./files/owncloud_permissions.sh -u vagrant --private-key=../.vagrant/machines/default/virtualbox/private_key --become
+* ownCloud has issues importing db dumps from other environments, so use separate S3 buckets for each of dev, staging, and production.
