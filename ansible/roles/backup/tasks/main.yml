@@ -35,7 +35,7 @@
     dest: /home/vagrant/owncloud-backup-{{ epochdatetime.stdout }}/
     owner: no
     group: no
-  delegate_to: 192.168.33.99
+  delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
 
 - name: copy data folder
   synchronize:
@@ -43,7 +43,7 @@
     dest: /home/vagrant/owncloud-backup-{{ epochdatetime.stdout }}/
     owner: no
     group: no
-  delegate_to: 192.168.33.99
+  delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
 
 - name: tar and gzip
   # has to be shell to work - best guess is that chdir doesn't work with command... although I think I've used it elsewhere...
