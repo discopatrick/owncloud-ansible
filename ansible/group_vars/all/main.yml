@@ -12,13 +12,6 @@ apache:
     install: '1'
     docroot: /vagrant
     servername: myApp.vb
-mysql:
-    install: '1'
-    root_password: '123'
-    database: db
-    user: user
-    password: password
-    dump: ''
 php:
     install: '1'
     ppa: php5-5.6

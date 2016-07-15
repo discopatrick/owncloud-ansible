@@ -14,20 +14,11 @@
     state: stopped
 
 - name: get filename of latest backup from aws
-  shell: aws s3 ls s3://discopatrick-owncloud-backups/ | awk '{print $4}' | grep 'owncloud-backup-.*\.tar\.gz' | sort | tail -n 1
+  shell: aws s3 ls s3://{{ aws.bucket_name }}/ | awk '{print $4}' | grep 'owncloud-backup-.*\.tar\.gz' | sort | tail -n 1
   register: backup_filename
 
 - name: copy backup file to home folder
-  command: aws s3 cp s3://discopatrick-owncloud-backups/{{ backup_filename.stdout }} ~/
-
-# - name: move backup file to owncloud folder
-#   become: yes
-#   copy:
-#     remote_src: yes
-#     src: /home/{{ my_remote_user }}/{{ backup_filename.stdout }}
-#     dest: /var/www/owncloud/owncloud-backup.tar.gz
-#     owner: www-data
-#     group: www-data
+  command: aws s3 cp s3://{{ aws.bucket_name }}/{{ backup_filename.stdout }} ~/
 
 - name: create temp backup directory
   file:
@@ -49,7 +40,6 @@
   synchronize:
     src: /home/{{ my_remote_user }}/backup_temp_dir/config
     dest: /var/www/owncloud/
-    # recursive: yes
     delete: yes
   delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
 

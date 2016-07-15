@@ -31,7 +31,7 @@
 - name: copy config folder
   synchronize:
     src: /var/www/owncloud/config
-    dest: /home/vagrant/owncloud-backup-{{ epochdatetime.stdout }}/
+    dest: /home/{{ my_remote_user }}/owncloud-backup-{{ epochdatetime.stdout }}/
     owner: no
     group: no
   delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
@@ -39,7 +39,7 @@
 - name: copy data folder
   synchronize:
     src: /var/www/owncloud/data
-    dest: /home/vagrant/owncloud-backup-{{ epochdatetime.stdout }}/
+    dest: /home/{{ my_remote_user }}/owncloud-backup-{{ epochdatetime.stdout }}/
     owner: no
     group: no
   delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
@@ -51,7 +51,7 @@
     chdir: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
 - name: copy backup to aws
-  command: "aws s3 cp ./owncloud-backup-{{ isodatetime.stdout }}.tar.gz s3://discopatrick-owncloud-backups/"
+  command: "aws s3 cp ./owncloud-backup-{{ isodatetime.stdout }}.tar.gz s3://{{ aws.bucket_name }}/"
   args:
     chdir: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
