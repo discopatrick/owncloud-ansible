@@ -41,9 +41,8 @@
     dest: ~/backup_temp_dir/
     list_files: yes
 
-- name: import sql dump
-  # must use 'shell' module, as the command uses the '<' character
-  shell: mysql --host=localhost --user={{ mysql.user }} --password={{ mysql.password }} {{ mysql.database }} <  ~/backup_temp_dir/owncloud.sql
+- name: mysql | Import dump
+  mysql_db: name={{ mysql.database }} state=import login_user={{ mysql.user }} login_password={{ mysql.password }} target=~/backup_temp_dir/owncloud.sql
 
 - name: sync the config folder
   become: yes
