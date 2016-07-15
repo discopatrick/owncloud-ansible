@@ -25,9 +25,8 @@
     state: directory
     path: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
-- name: create sql dump
-  # must use 'shell' module, as the command uses the '>' character to pass the output to a filename
-  shell: mysqldump --lock-tables --host=localhost --user={{ mysql.user }} --password={{ mysql.password }} {{ mysql.database }} > ~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud.sql
+- name: dump the db
+  mysql_db: name={{ mysql.database }} state=dump login_user={{ mysql.user }} login_password={{ mysql.password }} target=~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud.sql
 
 - name: copy config folder
   synchronize:
