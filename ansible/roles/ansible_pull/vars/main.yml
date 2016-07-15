@@ -10,9 +10,6 @@ logfile: /var/log/ansible-pull.log
 # Directory to where repository will be cloned
 workdir: /var/lib/ansible/local
 
-# Repository to check out -- YOU MUST CHANGE THIS
-# repo must contain a local.yml file at top level
-#repo_url: git://github.com/sfromm/ansible-playbooks.git
-repo_url: SUPPLY_YOUR_OWN_GIT_URL_HERE
+repo_url: git://github.com/discopatrick/owncloud-ansible.git
 
 repo_branch: feature/cron_backup
