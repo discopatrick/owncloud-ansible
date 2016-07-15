@@ -51,6 +51,20 @@
     chdir: /var/www/owncloud/
   when: occ_list.stdout.find('maintenance:install') != -1
 
+- name: disable update checker
+  become: yes
+  become_user: www-data
+  command: php occ config:system:set updatechecker --value false
+  args:
+    chdir: /var/www/owncloud/
+
+- name: disable update notification app
+  become: yes
+  become_user: www-data
+  command: php occ app:disable updatenotification
+  args:
+    chdir: /var/www/owncloud/
+
 - name: configure occ to use correct domain name # must happen after install
   become: yes
   become_user: www-data
