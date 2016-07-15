@@ -14,20 +14,11 @@
     state: stopped
 
 - name: get filename of latest backup from aws
-  shell: aws s3 ls s3://discopatrick-owncloud-backups/ | awk '{print $4}' | grep 'owncloud-backup-.*\.tar\.gz' | sort | tail -n 1
+  shell: aws s3 ls s3://{{ aws.bucket_name }}/ | awk '{print $4}' | grep 'owncloud-backup-.*\.tar\.gz' | sort | tail -n 1
   register: backup_filename
 
 - name: copy backup file to home folder
-  command: aws s3 cp s3://discopatrick-owncloud-backups/{{ backup_filename.stdout }} ~/
-
-# - name: move backup file to owncloud folder
-#   become: yes
-#   copy:
-#     remote_src: yes
-#     src: /home/vagrant/{{ backup_filename.stdout }}
-#     dest: /var/www/owncloud/owncloud-backup.tar.gz
-#     owner: www-data
-#     group: www-data
+  command: aws s3 cp s3://{{ aws.bucket_name }}/{{ backup_filename.stdout }} ~/
 
 - name: create temp backup directory
   file:
@@ -41,26 +32,24 @@
     dest: ~/backup_temp_dir/
     list_files: yes
 
-- name: import sql dump
-  # must use 'shell' module, as the command uses the '<' character
-  shell: mysql --host=localhost --user={{ mysql.user }} --password={{ mysql.password }} {{ mysql.database }} <  ~/backup_temp_dir/owncloud.sql
+- name: mysql | Import dump
+  mysql_db: name={{ mysql.database }} state=import login_user={{ mysql.user }} login_password={{ mysql.password }} target=~/backup_temp_dir/owncloud.sql
 
 - name: sync the config folder
   become: yes
   synchronize:
-    src: /home/vagrant/backup_temp_dir/config
+    src: /home/{{ my_remote_user }}/backup_temp_dir/config
     dest: /var/www/owncloud/
-    recursive: yes
     delete: yes
-  delegate_to: 192.168.33.99
+  delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
 
 - name: sync the data folder
   become: yes
   synchronize:
-    src: /home/vagrant/backup_temp_dir/data
+    src: /home/{{ my_remote_user }}/backup_temp_dir/data
     dest: /var/www/owncloud/
     delete: yes
-  delegate_to: 192.168.33.99
+  delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
 
 - name: delete the temp folder
   file:
@@ -88,3 +77,25 @@
   command: php occ maintenance:mode --off
   args:
     chdir: /var/www/owncloud/
+
+- name: disable update checker (in case it was enabled in backup)
+  become: yes
+  become_user: www-data
+  command: php occ config:system:set updatechecker --value false
+  args:
+    chdir: /var/www/owncloud/
+
+- name: disable update notification app (in case it was enabled in backup)
+  become: yes
+  become_user: www-data
+  command: php occ app:disable updatenotification
+  args:
+    chdir: /var/www/owncloud/
+
+- name: run the upgrade script, in case the db is from a previous version
+  become: yes
+  become_user: www-data
+  command: php occ upgrade
+  args:
+    chdir: /var/www/owncloud/
+  ignore_errors: yes
