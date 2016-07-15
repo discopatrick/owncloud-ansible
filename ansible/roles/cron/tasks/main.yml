@@ -1,0 +1,8 @@
+---
+
+- name: set up cron job for backup
+  cron: 
+    name: backup to aws
+    minute: '*/5'
+    hour: '*'
+    job: pwd
