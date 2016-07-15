@@ -1,0 +1,14 @@
+---
+
+# A playbook to be run on the remote host via ansible-pull.
+# It is written in the same way as any other playbook, 
+# except of course that 'localhost' will actually refer to
+# the remote host it is running on.
+
+- name: AWS backup
+  hosts: localhost
+  become: no
+  become_method: sudo
+  become_user: root
+  roles:
+    - backup

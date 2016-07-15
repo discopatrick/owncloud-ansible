@@ -15,4 +15,4 @@
     - php
     - composer
     - { role: app, tags: ['app'] }
-    - { role: cron, tags: ['cron']}
+    - { role: ansible_pull, tags: ['ansible_pull']}
