@@ -49,9 +49,9 @@
   synchronize:
     src: /home/{{ my_remote_user }}/backup_temp_dir/config
     dest: /var/www/owncloud/
-    recursive: yes
+    # recursive: yes
     delete: yes
-  delegate_to: 192.168.33.99
+  delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
 
 - name: sync the data folder
   become: yes
@@ -59,7 +59,7 @@
     src: /home/{{ my_remote_user }}/backup_temp_dir/data
     dest: /var/www/owncloud/
     delete: yes
-  delegate_to: 192.168.33.99
+  delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
 
 - name: delete the temp folder
   file:
