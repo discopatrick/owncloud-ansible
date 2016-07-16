@@ -5,26 +5,48 @@
     name: ansible
   become: yes
 
+- name: install git
+  apt:
+    name: git
+  become: yes
+
 - name: create local dir to work from
   file:
-    path: "{{workdir}}"
+    path: "{{ workdir }}"
     state: directory
-    owner: "{{ cron_user }}"
-    group: "{{ remote_user }}"
+    owner: "{{ my_remote_user }}"
+    group: "{{ my_remote_user }}"
     mode: 0751
+  become: yes
 
-- name: Create crontab entry to clone/pull git repository
-  template:
-    src: etc_cron.d_ansible-pull.j2
-    dest: /etc/cron.d/ansible-pull
-    owner: "{{ cron_user }}"
-    group: "{{ remote_user }}"
+- name: create initial empty log file
+  file:
+    state: touch
+    path: "{{ logfile }}"
+    owner: "{{ my_remote_user }}"
+    group: "{{ my_remote_user }}"
     mode: 0644
+  become: yes
+
+- name: Create crontab entry to ansible-pull
+  cron:
+    name: ansible-pull aws-backup
+    user: "{{ my_remote_user }}"
+    minute: "*/3"
+    job: "ansible-pull --directory {{ workdir }} --url {{ repo_url }} --checkout {{ repo_branch }} --force ansible/aws-backup.yml >> {{ logfile }} 2>&1"
+
+- name: Create crontab entry to pwd
+  cron:
+    name: check pwd
+    job: "pwd >> {{ logfile }} 2>&1"
+    # if no times specified, runs every minute
+    disabled: yes
 
 - name: Create logrotate entry for ansible-pull.log
   template:
     src: etc_logrotate.d_ansible-pull.j2
     dest: /etc/logrotate.d/ansible-pull
-    owner: "{{ cron_user }}"
-    group: "{{ remote_user }}"
+    owner: "{{ my_remote_user }}"
+    group: "{{ my_remote_user }}"
     mode: 0644
+  become: yes
