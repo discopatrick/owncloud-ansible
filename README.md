@@ -2,6 +2,7 @@
 
 ## TODO
 
+* ansible-pull vault decryption issue - dump db with mysql cli without the need for giving a password - perhaps with a passwordless user? Or 
 * Install python >= 2.7.9 to fix SSL certificate errors when downloading apt repo keys. Remove current 'validate_certs: no' setting
 * install and enable ClamAV antivirus?
 
