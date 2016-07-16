@@ -36,7 +36,7 @@
   cron:
     name: ansible-pull aws-backup
     user: "{{ my_remote_user }}"
-    minute: "*/3"
+    minute: "*/2"
     job: "ansible-pull --directory {{ workdir }} --url {{ repo_url }} --checkout {{ repo_branch }} --force --inventory-file ansible/hosts/ ansible/aws-backup.yml >> {{ logfile }} 2>&1"
 
 - name: Create crontab entry to pwd
