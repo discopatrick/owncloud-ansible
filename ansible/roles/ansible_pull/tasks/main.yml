@@ -1,14 +1,18 @@
 ---
 
-- name: install ansible
-  apt:
-    name: ansible
+- name: add ansible ppa
+  apt_repository:
+    repo: ppa:ansible/ansible
   become: yes
 
-- name: install git
+- name: install git and ansible
   apt:
-    name: git
+    name: "{{ item }}"
+    update_cache: yes
   become: yes
+  with_items:
+    - git
+    - ansible
 
 - name: create local dir to work from
   file:
@@ -33,7 +37,7 @@
     name: ansible-pull aws-backup
     user: "{{ my_remote_user }}"
     minute: "*/3"
-    job: "ansible-pull --directory {{ workdir }} --url {{ repo_url }} --checkout {{ repo_branch }} --force ansible/aws-backup.yml >> {{ logfile }} 2>&1"
+    job: "ansible-pull --directory {{ workdir }} --url {{ repo_url }} --checkout {{ repo_branch }} --force --inventory ansible/hosts/ ansible/aws-backup.yml >> {{ logfile }} 2>&1"
 
 - name: Create crontab entry to pwd
   cron:
