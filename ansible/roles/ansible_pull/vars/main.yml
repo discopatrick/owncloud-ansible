@@ -1,6 +1,3 @@
-# schedule is fed directly to cron
-schedule: '*/5 * * * *'
-
 # File that ansible will use for logs
 logfile: /var/log/ansible-pull.log
 
