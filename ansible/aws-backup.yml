@@ -6,7 +6,7 @@
 # the remote host it is running on.
 
 - name: AWS backup
-  hosts: ansible_pull
+  hosts: 127.0.0.1
   become: no
   become_method: sudo
   become_user: root
