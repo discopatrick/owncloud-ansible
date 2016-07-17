@@ -1,3 +1,5 @@
 ---
 
 mysql_database: db
+my_remote_user: vagrant
+ansible_pull_limit: dev_pull
