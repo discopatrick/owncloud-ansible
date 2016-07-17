@@ -255,4 +255,4 @@
     dest=~/.aws/config
     owner={{ my_remote_user }}
     group={{ my_remote_user }}
-    mode=0644
+    mode=0600
