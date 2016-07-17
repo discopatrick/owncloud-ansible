@@ -39,4 +39,4 @@
   template:
     src: my.cnf.tpl
     mode: 0600
-    dest: ~/my.cnf
+    dest: ~/.my.cnf
