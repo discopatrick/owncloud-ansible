@@ -15,10 +15,18 @@
 
 - name: get filename of latest backup from aws
   shell: aws s3 ls s3://{{ aws.bucket_name }}/ | awk '{print $4}' | grep 'owncloud-backup-.*\.tar\.gz' | sort | tail -n 1
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ aws.restore_access_key_id }}"
+    AWS_SECRET_ACCESS_KEY: "{{ aws.restore_secret_access_key }}"
+    AWS_DEFAULT_REGION: "{{ aws_region }}"
   register: backup_filename
 
 - name: copy backup file to home folder
   command: aws s3 cp s3://{{ aws.bucket_name }}/{{ backup_filename.stdout }} ~/
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ aws.restore_access_key_id }}"
+    AWS_SECRET_ACCESS_KEY: "{{ aws.restore_secret_access_key }}"
+    AWS_DEFAULT_REGION: "{{ aws_region }}"
 
 - name: create temp backup directory
   file:

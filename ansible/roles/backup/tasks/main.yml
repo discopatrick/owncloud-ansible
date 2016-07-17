@@ -51,7 +51,7 @@
     chdir: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
 - name: copy backup to aws
-  command: "aws s3 cp ./owncloud-backup-{{ isodatetime.stdout }}.tar.gz s3://{{ aws.bucket_name }}/"
+  command: "aws s3 cp ./owncloud-backup-{{ isodatetime.stdout }}.tar.gz s3://{{ aws.bucket_name }}/ --profile {{ aws_cli_profile_name }}"
   args:
     chdir: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
