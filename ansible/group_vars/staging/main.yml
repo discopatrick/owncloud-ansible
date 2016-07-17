@@ -4,7 +4,6 @@ my_remote_user: admin
 
 mysql:
   root_password: "{{ vault_mysql_root_password }}"
-  database: "{{ vault_mysql_database }}"
   user: "{{ vault_mysql_user }}" # must be no longer than 16 chars
   password: "{{ vault_mysql_password }}"
   dump: ''

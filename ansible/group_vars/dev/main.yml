@@ -4,7 +4,6 @@ my_remote_user: vagrant
 
 mysql:
     root_password: '123'
-    database: db
     user: user
     password: password
     dump: ''

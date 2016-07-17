@@ -26,7 +26,7 @@
     path: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
 - name: dump the db
-  mysql_db: name={{ mysql.database }} state=dump target=~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud.sql
+  mysql_db: name={{ mysql_database }} state=dump target=~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud.sql
 
 - name: copy config folder
   synchronize:

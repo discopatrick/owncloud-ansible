@@ -46,7 +46,7 @@
 - name: run owncloud cli installer (only if 'maintenance:install' task is available)
   become: yes
   become_user: www-data
-  command: 'php occ maintenance:install --database "mysql" --database-name "{{ mysql.database }}"  --database-user "{{ mysql.user }}" --database-pass "{{ mysql.password }}" --admin-user "{{ owncloud.admin_user }}" --admin-pass "{{ owncloud.admin_password }}"'
+  command: 'php occ maintenance:install --database "mysql" --database-name "{{ mysql_database }}"  --database-user "{{ mysql.user }}" --database-pass "{{ mysql.password }}" --admin-user "{{ owncloud.admin_user }}" --admin-pass "{{ owncloud.admin_password }}"'
   args:
     chdir: /var/www/owncloud/
   when: occ_list.stdout.find('maintenance:install') != -1

@@ -41,7 +41,7 @@
     list_files: yes
 
 - name: mysql | Import dump
-  mysql_db: name={{ mysql.database }} state=import login_user={{ mysql.user }} login_password={{ mysql.password }} target=~/backup_temp_dir/owncloud.sql
+  mysql_db: name={{ mysql_database }} state=import login_user={{ mysql.user }} login_password={{ mysql.password }} target=~/backup_temp_dir/owncloud.sql
 
 - name: sync the config folder
   become: yes
