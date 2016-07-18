@@ -2,4 +2,4 @@
 
 mysql_database: db
 my_remote_user: vagrant
-ansible_pull_inventory: dev-pull
+ansible_pull_limit: dev-pull
