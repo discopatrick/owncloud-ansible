@@ -73,6 +73,15 @@
   args:
     chdir: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
+- name: check status of file
+  stat:
+    path: ~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud-backup-{{ isodatetime.stdout }}.tar.gz
+  register: st
+
+- name: print status of file
+  debug:
+    var: st
+
 - name: copy backup to aws
   shell: "aws s3 cp ~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud-backup-{{ isodatetime.stdout }}.tar.gz s3://{{ aws_bucket_name }}/ --profile {{ aws_cli_profile_name }}"
 
