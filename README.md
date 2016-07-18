@@ -7,6 +7,7 @@
 * install and enable ClamAV antivirus?
 * research best practice for storing credentials on the server
 * general server hardening
+* investigate if s3 buckets have a setting to not allow overwrites of same-name files.
 
 ## Done
 
