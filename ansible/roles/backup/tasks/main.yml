@@ -37,6 +37,15 @@
   delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
   when: "'-pull' not in inventory_hostname"
 
+- name: copy config folder
+  synchronize:
+    src: /var/www/owncloud/config
+    dest: /home/{{ my_remote_user }}/owncloud-backup-{{ epochdatetime.stdout }}/
+    owner: no
+    group: no
+  delegate_to: 127.0.0.1 # both src and dest are on the current host in context
+  when: "'-pull' in inventory_hostname"
+
 - name: copy data folder
   synchronize:
     src: /var/www/owncloud/data
@@ -44,6 +53,15 @@
     owner: no
     group: no
   delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
+  when: "'-pull' not in inventory_hostname"
+
+- name: copy data folder
+  synchronize:
+    src: /var/www/owncloud/data
+    dest: /home/{{ my_remote_user }}/owncloud-backup-{{ epochdatetime.stdout }}/
+    owner: no
+    group: no
+  delegate_to: 127.0.0.1 # both src and dest are on the current host in context
   when: "'-pull' not in inventory_hostname"
 
 - name: tar and gzip
