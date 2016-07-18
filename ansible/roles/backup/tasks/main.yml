@@ -83,7 +83,7 @@
     var: st
 
 - name: echo $PATH
-  cmd: echo $PATH
+  cmd: "echo $PATH"
   register: pa
 
 - name: print path
