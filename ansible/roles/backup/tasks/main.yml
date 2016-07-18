@@ -35,6 +35,7 @@
     owner: no
     group: no
   delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
+  when: "'-pull' not in inventory_hostname"
 
 - name: copy data folder
   synchronize:
@@ -43,6 +44,7 @@
     owner: no
     group: no
   delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
+  when: "'-pull' not in inventory_hostname"
 
 - name: tar and gzip
   # has to be shell to work - best guess is that chdir doesn't work with command... although I think I've used it elsewhere...
