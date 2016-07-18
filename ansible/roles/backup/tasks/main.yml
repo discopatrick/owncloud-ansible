@@ -83,7 +83,7 @@
     var: st
 
 - name: echo $PATH
-  cmd: "echo $PATH"
+  command: echo $PATH
   register: pa
 
 - name: print path
@@ -91,7 +91,7 @@
     var: pa
 
 - name: which aws
-  cmd: which aws
+  command: which aws
   register: wh
 
 - name: print which
