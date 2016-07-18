@@ -4,3 +4,4 @@ mysql_database: 8CF7wpxoxwzPTRQhVGWW733Zq3aFgvcmF9BLcU9DKr2J2iNvcH
 my_remote_user: admin
 ansible_pull_limit: staging-pull
 ansible_pull_local_rsync_delegate: 127.0.0.1
+aws_bucket_name: discopatrick-owncloud-backups-staging-familial.golly.hearty
