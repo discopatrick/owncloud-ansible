@@ -28,6 +28,9 @@
 - name: dump the db
   mysql_db: name={{ mysql_database }} state=dump target=~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud.sql
 
+# TODO: the next 4 tasks are 2 sets of duplcates - one for push mode, one for pull mode.
+# try to find a cleaner solution
+
 - name: copy config folder
   synchronize:
     src: /var/www/owncloud/config
