@@ -1,0 +1,5 @@
+[staging_pull]
+staging-pull ansible_ssh_host=localhost
+
+[dev_pull]
+dev-pull ansible_ssh_host=localhost
