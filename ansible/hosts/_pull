@@ -1,7 +1,0 @@
-[staging_pull]
-staging-pull ansible_ssh_host=localhost
-178.62.53.81
-
-[dev_pull]
-dev-pull ansible_ssh_host=localhost
-192.168.33.99
