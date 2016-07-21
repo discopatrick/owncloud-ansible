@@ -11,13 +11,13 @@
 - name: add owncloud apt key
   become: yes
   apt_key:
-   url: https://download.owncloud.org/download/repositories/9.0/xUbuntu_14.04/Release.key
+   url: https://download.owncloud.org/download/repositories/9.0.3/xUbuntu_14.04/Release.key
    validate_certs: no # this is insecure and must be fixed
 
 - name: add owncloud repo to apt
   become: yes
   apt_repository:
-    repo: 'deb http://download.owncloud.org/download/repositories/9.0/xUbuntu_14.04/ /'
+    repo: 'deb http://download.owncloud.org/download/repositories/9.0.3/xUbuntu_14.04/ /'
     update_cache: yes
 
 - name: install owncloud
