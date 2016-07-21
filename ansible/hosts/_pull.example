@@ -1,9 +1,0 @@
-## TODO: document why this is necessary
-
-#[staging_pull]
-#staging-pull ansible_ssh_host=localhost
-#your_staging_hostname_or_ip
-
-#[dev_pull]
-#dev-pull ansible_ssh_host=localhost
-#your_dev_hostname_or_ip
