@@ -4,10 +4,13 @@ my_remote_user: vagrant
 
 mysql:
     root_password: '123'
-    database: db
     user: user
     password: password
     dump: ''
 
 aws:
-  bucket_name: "{{ vault_bucket_name }}"
+  bucket_name: "{{ vault_aws.bucket_name }}"
+  backup_access_key_id: "{{ vault_aws.backup_access_key_id }}"
+  backup_secret_access_key: "{{ vault_aws.backup_secret_access_key }}"
+  restore_access_key_id: "{{ vault_aws.restore_access_key_id }}"
+  restore_secret_access_key: "{{ vault_aws.restore_secret_access_key }}"

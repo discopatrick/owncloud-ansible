@@ -20,10 +20,10 @@
     - localhost
 
 - name: mysql | Create databases
-  mysql_db: name={{ mysql.database }} state=present login_user=root login_password={{ mysql.root_password }}
+  mysql_db: name={{ mysql_database }} state=present login_user=root login_password={{ mysql.root_password }}
 
 - name: mysql | Import dump
-  mysql_db: name={{ mysql.database }} state=import login_user=root login_password={{ mysql.root_password }} target=/vagrant/{{ mysql.dump }}
+  mysql_db: name={{ mysql_database }} state=import login_user=root login_password={{ mysql.root_password }} target=/vagrant/{{ mysql.dump }}
   when: mysql.dump
 
 - name: mysql | Ensure anonymous users are not in the database
@@ -33,4 +33,10 @@
     - "{{ current_hostname.stdout | lower }}"
 
 - name: mysql | Create users
-  mysql_user: name={{ mysql.user }} password={{ mysql.password }} priv={{ mysql.database }}.*:ALL state=present login_user=root login_password={{ mysql.root_password }}
+  mysql_user: name={{ mysql.user }} password={{ mysql.password }} priv={{ mysql_database }}.*:ALL state=present login_user=root login_password={{ mysql.root_password }}
+
+- name: mysql | add my.cnf file for mysql dump
+  template:
+    src: my.cnf.tpl
+    mode: 0600
+    dest: ~/.my.cnf

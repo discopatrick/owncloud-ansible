@@ -47,7 +47,7 @@ Vagrant.configure("2") do |config|
     if which('ansible-playbook')
         config.vm.provision "ansible" do |ansible|
             ansible.playbook = "ansible/playbook.yml"
-            ansible.inventory_path = "ansible/hosts/dev"
+            ansible.inventory_path = "ansible/hosts/"
             ansible.limit = 'dev'
             ansible.verbose = "v"
             ansible.vault_password_file = './ansible/.vault_pass'
@@ -56,5 +56,8 @@ Vagrant.configure("2") do |config|
         config.vm.provision :shell, path: "ansible/windows.sh", args: ["phansible-firstgo"]
     end
 
-    config.vm.synced_folder "./", "/vagrant", type: "nfs"
+    # disable default folder
+    config.vm.synced_folder ".", "/vagrant", disable: true
+    # set up our own for running ansible-pull tasks
+    # config.vm.synced_folder ".", "/var/lib/ansible/local"
 end

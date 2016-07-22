@@ -11,14 +11,20 @@
 - name: add owncloud apt key
   become: yes
   apt_key:
-   url: https://download.owncloud.org/download/repositories/9.0/xUbuntu_14.04/Release.key
+   url: https://download.owncloud.org/download/repositories/9.0.3/xUbuntu_14.04/Release.key
    validate_certs: no # this is insecure and must be fixed
 
 - name: add owncloud repo to apt
   become: yes
   apt_repository:
-    repo: 'deb http://download.owncloud.org/download/repositories/9.0/xUbuntu_14.04/ /'
+    repo: 'deb http://download.owncloud.org/download/repositories/9.0.3/xUbuntu_14.04/ /'
     update_cache: yes
+
+- name: stop apache to prevent front-end install
+  service:
+    name: apache2
+    state: stopped
+  notify: restart apache
 
 - name: install owncloud
   become: yes
@@ -46,7 +52,7 @@
 - name: run owncloud cli installer (only if 'maintenance:install' task is available)
   become: yes
   become_user: www-data
-  command: 'php occ maintenance:install --database "mysql" --database-name "{{ mysql.database }}"  --database-user "{{ mysql.user }}" --database-pass "{{ mysql.password }}" --admin-user "{{ owncloud.admin_user }}" --admin-pass "{{ owncloud.admin_password }}"'
+  command: 'php occ maintenance:install --database "mysql" --database-name "{{ mysql_database }}"  --database-user "{{ mysql.user }}" --database-pass "{{ mysql.password }}" --admin-user "{{ owncloud.admin_user }}" --admin-pass "{{ owncloud.admin_password }}"'
   args:
     chdir: /var/www/owncloud/
   when: occ_list.stdout.find('maintenance:install') != -1
@@ -138,9 +144,11 @@
     path: /var/www/owncloud/apps/calendar
   register: calendar_app_dir
 
+## TODO: combine the following get_url and unarchive pairs into single tasks?
+
 - name: get contacts app
   become: yes
-  become_user: www-data
+  # become_user: www-data
   get_url:
     url: https://github.com/owncloud/contacts/releases/download/v0.0.0.59/contacts.tar.gz
     dest: /var/www/owncloud/apps/
@@ -148,7 +156,7 @@
 
 - name: get calendar app
   become: yes
-  become_user: www-data
+  # become_user: www-data
   get_url:
     url: https://github.com/owncloud/calendar/releases/download/v1.2.2/calendar.tar.gz
     dest: /var/www/owncloud/apps/
@@ -156,7 +164,7 @@
 
 - name: unpack contacts app
   become: yes
-  become_user: www-data
+  # become_user: www-data
   unarchive:
     copy: no
     src: /var/www/owncloud/apps/contacts.tar.gz
@@ -165,7 +173,7 @@
 
 - name: unpack calendar app
   become: yes
-  become_user: www-data
+  # become_user: www-data
   unarchive:
     copy: no
     src: /var/www/owncloud/apps/calendar.tar.gz
@@ -174,7 +182,7 @@
 
 - name: remove contacts app tarball
   become: yes
-  become_user: www-data
+  # become_user: www-data
   file:
     path: /var/www/owncloud/apps/contacts.tar.gz
     state: absent
@@ -182,7 +190,7 @@
 
 - name: remove calendar app tarball
   become: yes
-  become_user: www-data
+  # become_user: www-data
   file:
     path: /var/www/owncloud/apps/calendar.tar.gz
     state: absent
@@ -255,4 +263,4 @@
     dest=~/.aws/config
     owner={{ my_remote_user }}
     group={{ my_remote_user }}
-    mode=0644
+    mode=0600
