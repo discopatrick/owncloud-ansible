@@ -1,0 +1,7 @@
+---
+
+- name: get certbot
+  become: yes
+  get_url:
+    url: https://dl.eff.org/certbot-auto
+    dest: /opt/bin/
