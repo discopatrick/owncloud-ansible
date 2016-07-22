@@ -10,6 +10,7 @@
     - curl
     - wget
     - python-software-properties
+    - acl # important when using 'become' with unprivileged users
 
 - name: Install Extra Packages
   become: yes
