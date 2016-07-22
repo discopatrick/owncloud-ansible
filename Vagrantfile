@@ -24,6 +24,11 @@ end
 
 Vagrant.configure("2") do |config|
 
+    # disable vagrant-vbguest plugin
+    if Vagrant.has_plugin?("vagrant-vbguest")
+        config.vbguest.no_install = true
+    end    
+
     config.vm.provider :virtualbox do |v|
         v.name = "phansible-firstgo"
         v.customize [
