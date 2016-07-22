@@ -1,7 +1,10 @@
-# rename to 'staging', uncomment the lines below, and add your own staging hostname
+# rename to 'staging', uncomment the lines below, and add your own staging hostname or ip
 
 #[owncloud]
-#staging-hostname
+#your_staging_hostname_or_ip
 
 #[staging]
-#staging-hostname
+#your_staging_hostname_or_ip
+
+#[staging_pull]
+#your_staging_hostname_or_ip

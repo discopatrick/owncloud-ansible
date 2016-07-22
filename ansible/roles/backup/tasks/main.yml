@@ -26,23 +26,40 @@
     path: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
 - name: dump the db
-  mysql_db: name={{ mysql.database }} state=dump login_user={{ mysql.user }} login_password={{ mysql.password }} target=~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud.sql
+  mysql_db: name={{ mysql_database }} state=dump target=~/owncloud-backup-{{ epochdatetime.stdout }}/owncloud.sql
+
+# TODO: the next 4 tasks are 2 sets of duplcates - one for push mode, one for pull mode.
+# try to find a cleaner solution
 
 - name: copy config folder
   synchronize:
     src: /var/www/owncloud/config
     dest: /home/{{ my_remote_user }}/owncloud-backup-{{ epochdatetime.stdout }}/
-    owner: no
-    group: no
+  become: yes
   delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
+  when: "'-pull' not in inventory_hostname"
+
+- name: copy config folder
+  synchronize:
+    src: /var/www/owncloud/config
+    dest: /home/{{ my_remote_user }}/owncloud-backup-{{ epochdatetime.stdout }}/
+  become: yes
+  delegate_to: 127.0.0.1 # both src and dest are on the current host in context
+  when: "'-pull' in inventory_hostname"
 
 - name: copy data folder
   synchronize:
     src: /var/www/owncloud/data
     dest: /home/{{ my_remote_user }}/owncloud-backup-{{ epochdatetime.stdout }}/
-    owner: no
-    group: no
   delegate_to: "{{ inventory_hostname }}" # both src and dest are on the current host in context
+  when: "'-pull' not in inventory_hostname"
+
+- name: copy data folder
+  synchronize:
+    src: /var/www/owncloud/data
+    dest: /home/{{ my_remote_user }}/owncloud-backup-{{ epochdatetime.stdout }}/
+  delegate_to: 127.0.0.1 # both src and dest are on the current host in context
+  when: "'-pull' in inventory_hostname"
 
 - name: tar and gzip
   # has to be shell to work - best guess is that chdir doesn't work with command... although I think I've used it elsewhere...
@@ -51,14 +68,16 @@
     chdir: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
 - name: copy backup to aws
-  command: "aws s3 cp ./owncloud-backup-{{ isodatetime.stdout }}.tar.gz s3://{{ aws.bucket_name }}/"
+  command: "/usr/local/bin/aws s3 cp owncloud-backup-{{ isodatetime.stdout }}.tar.gz s3://{{ aws_bucket_name }}/ --profile {{ aws_cli_profile_name }}"
   args:
     chdir: ~/owncloud-backup-{{ epochdatetime.stdout }}
 
 - name: delete the backup folder
   file:
     state: absent
+    # TODO: set path to correct $HOME, now that we're using become
     path: ~/owncloud-backup-{{ epochdatetime.stdout }}
+  become: yes
 
 - name: start apache
   become: yes

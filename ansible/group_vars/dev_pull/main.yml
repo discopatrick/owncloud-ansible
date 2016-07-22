@@ -1,0 +1,7 @@
+---
+
+mysql_database: db
+my_remote_user: vagrant
+ansible_pull_limit: dev-pull
+ansible_pull_local_rsync_delegate: 127.0.0.1
+aws_bucket_name: discopatrick-owncloud-backups-dev-sanskrit.whirl.wiredraw

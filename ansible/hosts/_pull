@@ -1,0 +1,11 @@
+## TODO: document why this is necessary
+
+[dev_pull]
+dev-pull ansible_ssh_host=localhost
+
+[staging_pull]
+staging-pull ansible_ssh_host=localhost
+
+## Could the following help here?
+## http://docs.ansible.com/ansible/intro_inventory.html#non-ssh-connection-types
+## http://docs.ansible.com/ansible/playbooks_delegation.html#local-playbooks
