@@ -20,6 +20,8 @@
     repo: 'deb http://download.owncloud.org/download/repositories/9.0.3/xUbuntu_14.04/ /'
     update_cache: yes
 
+# TODO: disable apache to prevent front-end install
+
 - name: install owncloud
   become: yes
   apt:

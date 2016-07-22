@@ -75,6 +75,7 @@
 - name: delete the backup folder
   file:
     state: absent
+    # TODO: set path to correct $HOME, now that we're using become
     path: ~/owncloud-backup-{{ epochdatetime.stdout }}
   become: yes
 
