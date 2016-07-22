@@ -2,7 +2,6 @@
 
 ## TODO
 
-* ansible-pull vault decryption issue - dump db with mysql cli without the need for giving a password - perhaps with a passwordless user?
 * Install python >= 2.7.9 to fix SSL certificate errors when downloading apt repo keys. Remove current 'validate_certs: no' setting
 * install and enable ClamAV antivirus?
 * research best practice for storing credentials on the server
@@ -12,6 +11,7 @@
 ## Done
 
 * ~~use separate AWS IAM users for backup and restore. Backup credentials can live on the server safely, as they will only have 'list' and 'put' permissions. Restore creds require 'get' perms and so should always be encrypted.~~
+* ~~ansible-pull vault decryption issue - dump db with mysql cli without the need for giving a password - perhaps with a passwordless user?~~
 
 ## Useful things to remember
 
