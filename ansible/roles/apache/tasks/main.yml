@@ -28,3 +28,11 @@
   template: src=vhost22.conf.tpl dest=/etc/apache2/sites-available/default
   notify: restart apache
   when: apache_version.stdout.find('Apache/2.2.') != -1
+
+- name: disable default sites-available
+  become: yes
+  command: a2dissite {{ item }}
+  with_items:
+    - 000-default
+    - 000-default-le-ssl
+  notify: restart apache
