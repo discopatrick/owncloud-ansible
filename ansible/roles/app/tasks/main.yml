@@ -74,14 +74,14 @@
 - name: configure occ to use correct domain name # must happen after install
   become: yes
   become_user: www-data
-  command: php occ config:system:set overwrite.cli.url --value "{{ protocol }}://{{ domain_name }}/owncloud"
+  command: php occ config:system:set overwrite.cli.url --value "{{ protocol }}://{{ domain_name }}/"
   args:
     chdir: /var/www/owncloud/
 
 - name: configure owncloud with correct RewriteBase
   become: yes
   become_user: www-data
-  command: php occ config:system:set htaccess.RewriteBase --value "/owncloud"
+  command: php occ config:system:set htaccess.RewriteBase --value "/"
   args:
     chdir: /var/www/owncloud/
 
@@ -92,7 +92,7 @@
   lineinfile:
     dest: /var/www/owncloud/.htaccess
     regexp: ^\s*RewriteBase
-    line: RewriteBase /owncloud
+    line: RewriteBase /
 
 # todo: this attempt at idempotency for the 'add our domain/ip' task does not work.
 # however, no errors are caused, so it's fine for now.

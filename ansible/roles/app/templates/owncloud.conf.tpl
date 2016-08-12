@@ -1,4 +1,4 @@
-Alias /owncloud "/var/www/owncloud/"
+Alias / "/var/www/owncloud/"
 
 <Directory /var/www/owncloud/>
   Options +FollowSymlinks
