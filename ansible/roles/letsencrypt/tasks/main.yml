@@ -1,12 +1,5 @@
 ---
 
-- name: set explicit ServerName for default website
-  become: yes
-  lineinfile:
-    dest: /etc/apache2/sites-available/000-default.conf
-    regexp: ServerName
-    line: ServerName {{ apache_servername }}
-
 - name: get certbot
   become: yes
   get_url:
@@ -15,7 +8,7 @@
     mode: a+x
 
 - name: install certificate
-  command: certbot-auto --non-interactive {{ cert.additional_flags }} --agree-tos --email {{ cert.email_address }} --apache --domains {{ apache_servername }}
+  command: certbot-auto --non-interactive {{ cert.additional_flags }} --agree-tos --email {{ cert.email_address }} --apache --domains {{ domain_name }}
 
 - name: set up cert renewal cron job
   cron:
