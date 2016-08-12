@@ -24,6 +24,21 @@ end
 
 Vagrant.configure("2") do |config|
 
+    # disable vagrant-vbguest plugin
+    if Vagrant.has_plugin?("vagrant-vbguest")
+        config.vbguest.no_install = true
+    end    
+
+  if Vagrant.has_plugin? 'vagrant-hostmanager'
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+    config.hostmanager.manage_guest = false
+    config.hostmanager.aliases = ['owncloud.local']
+  else
+    fail_with_message "vagrant-hostmanager missing, please install the plugin with this command:\nvagrant plugin install vagrant-hostmanager"
+  end
+
+
     config.vm.provider :virtualbox do |v|
         v.name = "phansible-firstgo"
         v.customize [

@@ -14,3 +14,6 @@ aws:
   backup_secret_access_key: "{{ vault_aws.backup_secret_access_key }}"
   restore_access_key_id: "{{ vault_aws.restore_access_key_id }}"
   restore_secret_access_key: "{{ vault_aws.restore_secret_access_key }}"
+
+domain_name: owncloud.local
+protocol: http
