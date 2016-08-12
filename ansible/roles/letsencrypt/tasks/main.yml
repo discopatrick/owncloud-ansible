@@ -10,6 +10,24 @@
 - name: install certificate
   command: certbot-auto --non-interactive {{ cert.additional_flags }} --agree-tos --email {{ cert.email_address }} --apache --domains {{ domain_name }}
 
+- name: create initial empty log file
+  file:
+    state: touch
+    path: "{{ letsencrypt_logfile }}"
+    owner: "{{ my_remote_user }}"
+    group: "{{ my_remote_user }}"
+    mode: 0644
+  become: yes
+
+- name: Create logrotate entry for letsencrypt logfile
+  template:
+    src: etc_logrotate.d_letsencrypt-renewal.j2
+    dest: /etc/logrotate.d/letsencrypt-renewal
+    owner: "{{ my_remote_user }}"
+    group: "{{ my_remote_user }}"
+    mode: 0644
+  become: yes
+
 - name: set up cert renewal cron job
   cron:
     hour: 0,12 # midnight and midday
@@ -17,4 +35,4 @@
     name: ssl certificate renewal
     user: "{{ my_remote_user }}"
     # sleep for a random number of minutes before renewing cert
-    job: sleep $(shuf -i 0-59 -n 1)m; certbot-auto renew {{ cert.additional_flags }} --no-self-upgrade --quiet
+    job: sleep $(shuf -i 0-59 -n 1)m; certbot-auto renew {{ cert.additional_flags }} --no-self-upgrade --quiet >> {{ letsencrypt_logfile }} 2>&1
