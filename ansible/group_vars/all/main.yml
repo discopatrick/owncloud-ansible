@@ -11,7 +11,7 @@ vagrant_local:
 apache:
     install: '1'
     docroot: /vagrant
-    servername: myApp.vb
+    servername: owncloud.top
 php:
     install: '1'
     ppa: php5-5.6
