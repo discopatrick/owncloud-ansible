@@ -74,7 +74,7 @@
 - name: configure occ to use correct domain name # must happen after install
   become: yes
   become_user: www-data
-  command: php occ config:system:set overwrite.cli.url --value "http://{{ inventory_hostname }}/owncloud"
+  command: php occ config:system:set overwrite.cli.url --value "{{ protocol }}://{{ domain_name }}/owncloud"
   args:
     chdir: /var/www/owncloud/
 
@@ -109,7 +109,7 @@
 - name: add our domain/ip to the list of trusted_domains # (only if not already there)
   become: yes
   become_user: www-data
-  command: php occ config:system:set trusted_domains 1 --value={{ inventory_hostname }}
+  command: php occ config:system:set trusted_domains 1 --value={{ domain_name }}
   args:
     chdir: /var/www/owncloud/
   # when: trusted_domains.stdout.find('192.168.33.99') != -1
