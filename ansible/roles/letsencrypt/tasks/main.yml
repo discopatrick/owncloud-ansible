@@ -8,7 +8,7 @@
     mode: a+x
 
 - name: install certificate
-  command: certbot-auto --non-interactive {{ cert.additional_flags }} --agree-tos --email {{ cert.email_address }} --apache --domains {{ domain_name }}
+  command: certbot-auto --non-interactive {{ cert.additional_flags }} --agree-tos --email {{ cert.email_address }} --apache --domains {{ domain_name }} --redirect --hsts
 
 - name: create initial empty log file
   file:
